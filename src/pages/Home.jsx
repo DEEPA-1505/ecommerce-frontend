@@ -78,8 +78,8 @@ export default function Home() {
       <section id="products" className="container mt-5">
         <div className="row">
           {products.length > 0 ? (
-            products.map((product) => (
-              <ProductCard key={product._id} product={product} />
+            products.map((product, index) => (
+              <ProductCard key={index} product={product} index={index} />
             ))
           ) : (
             <p className="text-center">No products found.</p>
