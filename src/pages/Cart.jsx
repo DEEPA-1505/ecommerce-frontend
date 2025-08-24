@@ -1,12 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import img1 from "../assets/images/products/img1.png";
-import img2 from "../assets/images/products/img2.png";
-import img3 from "../assets/images/products/img3.png";
-import img4 from "../assets/images/products/img4.png";
-import img5 from "../assets/images/products/img5.png";
-import img6 from "../assets/images/products/img6.png";
-import img7 from "../assets/images/products/img7.png";
 
 export default function Cart({ cartItems, setCartItems }) {
     const navigate = useNavigate();
@@ -15,23 +8,31 @@ export default function Cart({ cartItems, setCartItems }) {
     const [orderMessage, setOrderMessage] = useState('');
     const [processingOrder, setProcessingOrder] = useState(false);
 
+    // Create an images object using public folder paths
+    const images = {
+        'img1.png': '/images/products/img1.png',
+        'img2.png': '/images/products/img2.png',
+        'img3.png': '/images/products/img3.png',
+        'img4.png': '/images/products/img4.png',
+        'img5.png': '/images/products/img5.png',
+        'img6.png': '/images/products/img6.png',
+        'img7.png': '/images/products/img7.png',
+    };
+
     // Function to get the correct image based on product data
     const getProductImage = (productData) => {
         if (productData?.images?.[0]?.image) {
             const imageName = productData.images[0].image;
-            // Map image names to imported images
-            switch (imageName) {
-                case 'img1.png': return img1;
-                case 'img2.png': return img2;
-                case 'img3.png': return img3;
-                case 'img4.png': return img4;
-                case 'img5.png': return img5;
-                case 'img6.png': return img6;
-                case 'img7.png': return img7;
-                default: return img1; // fallback to first image
+            
+            // Get image from the images object
+            const imageUrl = images[imageName];
+            if (imageUrl) {
+                return imageUrl;
+            } else {
+                return images['img1.png']; // fallback to first image
             }
         }
-        return img1; // fallback to first image
+        return images['img1.png']; // fallback to first image
     };
 
     // Function to find the correct product index by name
@@ -83,6 +84,14 @@ export default function Cart({ cartItems, setCartItems }) {
     const removeFromCart = (index) => {
         const updatedCart = cartItems.filter((_, i) => i !== index);
         setCartItems(updatedCart);
+    };
+
+    // Function to clear entire cart
+    const clearCart = () => {
+        const confirmClear = window.confirm('Are you sure you want to clear your entire cart?');
+        if (confirmClear) {
+            setCartItems([]);
+        }
     };
 
     // Function to place order
@@ -158,10 +167,23 @@ export default function Cart({ cartItems, setCartItems }) {
         <div className="min-h-screen bg-gray-50 py-8">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="mb-8">
-                    <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
-                        Your Cart: <span className="text-blue-600">{cartItems.length} items</span>
-                    </h2>
-                    <p className="text-gray-600 mt-2">Review your items and proceed to checkout</p>
+                    <div className="flex justify-between items-center">
+                        <div>
+                            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+                                Your Cart: <span className="text-blue-600">{cartItems.length} items</span>
+                            </h2>
+                            <p className="text-gray-600 mt-2">Review your items and proceed to checkout</p>
+                        </div>
+                        <button
+                            onClick={clearCart}
+                            className="text-red-600 hover:text-red-800 font-medium transition-colors duration-200 flex items-center space-x-1"
+                        >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                            <span>Clear Cart</span>
+                        </button>
+                    </div>
                 </div>
                 
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -180,7 +202,6 @@ export default function Cart({ cartItems, setCartItems }) {
                                                         src={getProductImage(item.product)}
                                                         alt={item.product?.name || "Product"}
                                                     />
-                                                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-5 transition-all duration-300 rounded-lg"></div>
                                                 </div>
                                             </div>
 
@@ -296,11 +317,9 @@ export default function Cart({ cartItems, setCartItems }) {
                             </button>
                             
                             {/* Continue Shopping Button */}
-                            {orderPlaced && (
-                                <Link to="/" className="block w-full bg-white border-2 border-blue-600 text-blue-600 hover:bg-blue-50 font-semibold py-4 px-6 rounded-lg text-center transition-all duration-200">
-                                    Continue Shopping
-                                </Link>
-                            )}
+                            <Link to="/" className="block w-full bg-white border-2 border-blue-600 text-blue-600 hover:bg-blue-50 font-semibold py-4 px-6 rounded-lg text-center transition-all duration-200">
+                                Continue Shopping
+                            </Link>
                         </div>
                     </div>
                 </div>
