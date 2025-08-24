@@ -1,5 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import img1 from "../assets/images/products/img1.png";
+import img2 from "../assets/images/products/img2.png";
+import img3 from "../assets/images/products/img3.png";
+import img4 from "../assets/images/products/img4.png";
+import img5 from "../assets/images/products/img5.png";
+import img6 from "../assets/images/products/img6.png";
+import img7 from "../assets/images/products/img7.png";
 
 export default function Cart({ cartItems, setCartItems }) {
     const navigate = useNavigate();
@@ -8,27 +15,23 @@ export default function Cart({ cartItems, setCartItems }) {
     const [orderMessage, setOrderMessage] = useState('');
     const [processingOrder, setProcessingOrder] = useState(false);
 
-    // Function to generate colorful placeholder images
-    const getColorfulImage = (index) => {
-        const colors = [
-            'from-pink-400 to-purple-500',
-            'from-blue-400 to-cyan-500',
-            'from-green-400 to-emerald-500',
-            'from-yellow-400 to-orange-500',
-            'from-red-400 to-pink-500',
-            'from-indigo-400 to-purple-500',
-            'from-teal-400 to-blue-500'
-        ];
-        
-        const icons = [
-            '🛍️', '📱', '💻', '🎧', '👕', '👟', '👜'
-        ];
-        
-        return (
-            <div className={`w-full h-24 rounded-lg bg-gradient-to-br ${colors[index % colors.length]} flex items-center justify-center text-2xl shadow-lg`}>
-                <span className="drop-shadow-lg">{icons[index % icons.length]}</span>
-            </div>
-        );
+    // Function to get the correct image based on product data
+    const getProductImage = (productData) => {
+        if (productData?.images?.[0]?.image) {
+            const imageName = productData.images[0].image;
+            // Map image names to imported images
+            switch (imageName) {
+                case 'img1.png': return img1;
+                case 'img2.png': return img2;
+                case 'img3.png': return img3;
+                case 'img4.png': return img4;
+                case 'img5.png': return img5;
+                case 'img6.png': return img6;
+                case 'img7.png': return img7;
+                default: return img1; // fallback to first image
+            }
+        }
+        return img1; // fallback to first image
     };
 
     // Function to find the correct product index by name
@@ -172,7 +175,12 @@ export default function Cart({ cartItems, setCartItems }) {
                                             {/* Product Image */}
                                             <div className="col-span-4 lg:col-span-3">
                                                 <div className="relative group">
-                                                    {getColorfulImage(index)}
+                                                    <img
+                                                        className="w-full h-24 object-cover rounded-lg shadow-lg group-hover:scale-105 transition-transform duration-300"
+                                                        src={getProductImage(item.product)}
+                                                        alt={item.product?.name || "Product"}
+                                                    />
+                                                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-5 transition-all duration-300 rounded-lg"></div>
                                                 </div>
                                             </div>
 

@@ -1,33 +1,32 @@
 
-import img1 from "../assets/images/products/img1.png";
-import img2 from "../assets/images/products/img2.png";
-import img3 from "../assets/images/products/img3.png";
-import img4 from "../assets/images/products/img4.png";
-import img5 from "../assets/images/products/img5.png";
-import img6 from "../assets/images/products/img6.png";
-import img7 from "../assets/images/products/img7.png";
 import { Link } from "react-router-dom";
 
-const fallbackImages = [img1, img2, img3, img4, img5, img6, img7];
+// Create an images object using public folder paths
+const images = {
+  'img1.png': '/images/products/img1.png',
+  'img2.png': '/images/products/img2.png',
+  'img3.png': '/images/products/img3.png',
+  'img4.png': '/images/products/img4.png',
+  'img5.png': '/images/products/img5.png',
+  'img6.png': '/images/products/img6.png',
+  'img7.png': '/images/products/img7.png',
+};
 
 export default function ProductCard({ product, index }) {
   // Function to get the correct image based on product data
   const getProductImage = (productData) => {
     if (productData?.images?.[0]?.image) {
       const imageName = productData.images[0].image;
-      // Map image names to imported images
-      switch (imageName) {
-        case 'img1.png': return img1;
-        case 'img2.png': return img2;
-        case 'img3.png': return img3;
-        case 'img4.png': return img4;
-        case 'img5.png': return img5;
-        case 'img6.png': return img6;
-        case 'img7.png': return img7;
-        default: return img1; // fallback to first image
+      
+      // Get image from the images object
+      const imageUrl = images[imageName];
+      if (imageUrl) {
+        return imageUrl;
+      } else {
+        return images['img1.png']; // fallback to first image
       }
     }
-    return img1; // fallback to first image
+    return images['img1.png']; // fallback to first image
   };
 
   return (
@@ -40,7 +39,6 @@ export default function ProductCard({ product, index }) {
               src={getProductImage(product)}
               alt={product?.name || "Product"}
             />
-            <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300 rounded-lg"></div>
           </div>
         </div>
         

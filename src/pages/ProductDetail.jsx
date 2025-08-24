@@ -2,6 +2,17 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
+// Create an images object using public folder paths
+const images = {
+  'img1.png': '/images/products/img1.png',
+  'img2.png': '/images/products/img2.png',
+  'img3.png': '/images/products/img3.png',
+  'img4.png': '/images/products/img4.png',
+  'img5.png': '/images/products/img5.png',
+  'img6.png': '/images/products/img6.png',
+  'img7.png': '/images/products/img7.png',
+};
+
 export default function ProductDetail({cartItems, setCartItems}) {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
@@ -11,27 +22,20 @@ export default function ProductDetail({cartItems, setCartItems}) {
   const [addedToCart, setAddedToCart] = useState(false);
   const [cartMessage, setCartMessage] = useState('');
 
-  // Function to generate colorful placeholder images
-  const getColorfulImage = (index) => {
-    const colors = [
-      'from-pink-400 to-purple-500',
-      'from-blue-400 to-cyan-500',
-      'from-green-400 to-emerald-500',
-      'from-yellow-400 to-orange-500',
-      'from-red-400 to-pink-500',
-      'from-indigo-400 to-purple-500',
-      'from-teal-400 to-blue-500'
-    ];
-    
-    const icons = [
-      '🛍️', '📱', '💻', '🎧', '👕', '👟', '👜'
-    ];
-    
-    return (
-      <div className={`w-full h-auto rounded-xl bg-gradient-to-br ${colors[index % colors.length]} flex items-center justify-center text-8xl shadow-2xl min-h-[400px]`}>
-        <span className="drop-shadow-lg">{icons[index % icons.length]}</span>
-      </div>
-    );
+  // Function to get the correct image based on product data
+  const getProductImage = (productData) => {
+    if (productData?.images?.[0]?.image) {
+      const imageName = productData.images[0].image;
+      
+      // Get image from the images object
+      const imageUrl = images[imageName];
+      if (imageUrl) {
+        return imageUrl;
+      } else {
+        return images['img1.png']; // fallback to first image
+      }
+    }
+    return images['img1.png']; // fallback to first image
   };
 
   useEffect(() => {
@@ -104,10 +108,19 @@ export default function ProductDetail({cartItems, setCartItems}) {
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
             {/* Product Image */}
-            <div className="p-8 bg-gray-50">
+            <div className="p-8">
               <div className="relative group">
-                {getColorfulImage(parseInt(id))}
-                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-5 transition-all duration-300 rounded-xl"></div>
+                <img
+                  className="w-full h-auto max-h-96 object-contain rounded-xl shadow-2xl group-hover:scale-105 transition-transform duration-300"
+                  src={getProductImage(product)}
+                  alt={product?.name || "Product"}
+                  onError={(e) => {
+                    console.error('Image failed to load:', e.target.src);
+                  }}
+                  onLoad={() => {
+                    console.log('Image loaded successfully:', getProductImage(product));
+                  }}
+                />
               </div>
             </div>
 
