@@ -1,33 +1,27 @@
-
-import img1 from "../assets/images/products/img1.png";
-import img2 from "../assets/images/products/img2.png";
-import img3 from "../assets/images/products/img3.png";
-import img4 from "../assets/images/products/img4.png";
-import img5 from "../assets/images/products/img5.png";
-import img6 from "../assets/images/products/img6.png";
-import img7 from "../assets/images/products/img7.png";
 import { Link } from "react-router-dom";
 
-const fallbackImages = [img1, img2, img3, img4, img5, img6, img7];
-
 export default function ProductCard({ product, index }) {
-  // Function to get the correct image based on product data
-  const getProductImage = (productData) => {
-    if (productData?.images?.[0]?.image) {
-      const imageName = productData.images[0].image;
-      // Map image names to imported images
-      switch (imageName) {
-        case 'img1.png': return img1;
-        case 'img2.png': return img2;
-        case 'img3.png': return img3;
-        case 'img4.png': return img4;
-        case 'img5.png': return img5;
-        case 'img6.png': return img6;
-        case 'img7.png': return img7;
-        default: return img1; // fallback to first image
-      }
-    }
-    return img1; // fallback to first image
+  // Function to generate colorful placeholder images
+  const getColorfulImage = (index) => {
+    const colors = [
+      'from-pink-400 to-purple-500',
+      'from-blue-400 to-cyan-500',
+      'from-green-400 to-emerald-500',
+      'from-yellow-400 to-orange-500',
+      'from-red-400 to-pink-500',
+      'from-indigo-400 to-purple-500',
+      'from-teal-400 to-blue-500'
+    ];
+    
+    const icons = [
+      '🛍️', '📱', '💻', '🎧', '👕', '👟', '👜'
+    ];
+    
+    return (
+      <div className={`w-full h-48 rounded-lg bg-gradient-to-br ${colors[index % colors.length]} flex items-center justify-center text-6xl shadow-lg`}>
+        <span className="drop-shadow-lg">{icons[index % icons.length]}</span>
+      </div>
+    );
   };
 
   return (
@@ -35,11 +29,7 @@ export default function ProductCard({ product, index }) {
       <div className="card group">
         <div className="p-4">
           <div className="relative overflow-hidden rounded-lg">
-            <img
-              className="w-full h-48 object-cover rounded-lg mx-auto group-hover:scale-105 transition-transform duration-300"
-              src={getProductImage(product)}
-              alt={product?.name || "Product"}
-            />
+            {getColorfulImage(index)}
             <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300 rounded-lg"></div>
           </div>
         </div>
@@ -83,7 +73,3 @@ export default function ProductCard({ product, index }) {
     </div>
   );
 }
-
-
-
-

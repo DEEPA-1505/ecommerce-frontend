@@ -1,12 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import img1 from "../assets/images/products/img1.png";
-import img2 from "../assets/images/products/img2.png";
-import img3 from "../assets/images/products/img3.png";
-import img4 from "../assets/images/products/img4.png";
-import img5 from "../assets/images/products/img5.png";
-import img6 from "../assets/images/products/img6.png";
-import img7 from "../assets/images/products/img7.png";
 
 export default function Cart({ cartItems, setCartItems }) {
     const navigate = useNavigate();
@@ -15,23 +8,27 @@ export default function Cart({ cartItems, setCartItems }) {
     const [orderMessage, setOrderMessage] = useState('');
     const [processingOrder, setProcessingOrder] = useState(false);
 
-    // Function to get the correct image based on product data
-    const getProductImage = (productData) => {
-        if (productData?.images?.[0]?.image) {
-            const imageName = productData.images[0].image;
-            // Map image names to imported images
-            switch (imageName) {
-                case 'img1.png': return img1;
-                case 'img2.png': return img2;
-                case 'img3.png': return img3;
-                case 'img4.png': return img4;
-                case 'img5.png': return img5;
-                case 'img6.png': return img6;
-                case 'img7.png': return img7;
-                default: return img1; // fallback to first image
-            }
-        }
-        return img1; // fallback to first image
+    // Function to generate colorful placeholder images
+    const getColorfulImage = (index) => {
+        const colors = [
+            'from-pink-400 to-purple-500',
+            'from-blue-400 to-cyan-500',
+            'from-green-400 to-emerald-500',
+            'from-yellow-400 to-orange-500',
+            'from-red-400 to-pink-500',
+            'from-indigo-400 to-purple-500',
+            'from-teal-400 to-blue-500'
+        ];
+        
+        const icons = [
+            '🛍️', '📱', '💻', '🎧', '👕', '👟', '👜'
+        ];
+        
+        return (
+            <div className={`w-full h-24 rounded-lg bg-gradient-to-br ${colors[index % colors.length]} flex items-center justify-center text-2xl shadow-lg`}>
+                <span className="drop-shadow-lg">{icons[index % icons.length]}</span>
+            </div>
+        );
     };
 
     // Function to find the correct product index by name
@@ -124,12 +121,19 @@ export default function Cart({ cartItems, setCartItems }) {
 
     if (cartItems.length === 0) {
         return (
-            <div className="container container-fluid text-center mt-5">
-                <h2>Your Cart is Empty</h2>
-                <p>Add some products to your cart to see them here.</p>
-                <Link to="/" className="btn btn-primary">
-                    Continue Shopping
-                </Link>
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                <div className="text-center max-w-md mx-auto px-4">
+                    <div className="text-gray-400 mb-6">
+                        <svg className="mx-auto h-24 w-24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01" />
+                        </svg>
+                    </div>
+                    <h2 className="text-3xl font-bold text-gray-900 mb-4">Your Cart is Empty</h2>
+                    <p className="text-gray-600 mb-8">Add some products to your cart to see them here.</p>
+                    <Link to="/" className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                        Continue Shopping
+                    </Link>
+                </div>
             </div>
         );
     }
@@ -137,144 +141,159 @@ export default function Cart({ cartItems, setCartItems }) {
     // Show loading if product indices are not yet loaded
     if (Object.keys(productIndices).length === 0) {
         return (
-            <div className="container container-fluid text-center mt-5">
-                <h2>Loading Cart...</h2>
-                <p>Please wait while we prepare your cart.</p>
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-2">Loading Cart...</h2>
+                    <p className="text-gray-600">Please wait while we prepare your cart.</p>
+                </div>
             </div>
         );
     }
 
-    // Debug: Log cart items and product indices
-    console.log('Cart items:', cartItems);
-    console.log('Product indices:', productIndices);
-
     return (
-        <div className="container container-fluid">
-            <h2 className="mt-5">Your Cart: <b>{cartItems.length} items</b></h2>
-            
-            <div className="row d-flex justify-content-between">
-                <div className="col-12 col-lg-8">
-                    <hr />
-                    {cartItems.map((item, index) => (
-                        <div key={index} className="cart-item">
-                            <div className="row">
-                                <div className="col-4 col-lg-3">
-                                    <img 
-                                        src={getProductImage(item.product)} 
-                                        alt={item.product.name} 
-                                        height="90" 
-                                        width="115"
-                                        style={{ objectFit: 'cover' }}
-                                    />
-                                </div>
+        <div className="min-h-screen bg-gray-50 py-8">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="mb-8">
+                    <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+                        Your Cart: <span className="text-blue-600">{cartItems.length} items</span>
+                    </h2>
+                    <p className="text-gray-600 mt-2">Review your items and proceed to checkout</p>
+                </div>
+                
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                    {/* Cart Items */}
+                    <div className="lg:col-span-3">
+                        <div className="bg-white rounded-2xl shadow-lg p-6">
+                            <div className="space-y-6">
+                                {cartItems.map((item, index) => (
+                                    <div key={index} className="border-b border-gray-200 pb-6 last:border-b-0">
+                                        <div className="grid grid-cols-12 gap-4 items-center">
+                                            {/* Product Image */}
+                                            <div className="col-span-4 lg:col-span-3">
+                                                <div className="relative group">
+                                                    {getColorfulImage(index)}
+                                                </div>
+                                            </div>
 
-                                <div className="col-5 col-lg-3">
-                                    <Link 
-                                        to={`/product/${productIndices[item.product.name] !== undefined ? productIndices[item.product.name] : item.productIndex || index}`}
-                                        style={{ 
-                                            color: '#007bff', 
-                                            textDecoration: 'none',
-                                            fontWeight: '500'
-                                        }}
-                                        onMouseEnter={(e) => e.target.style.textDecoration = 'underline'}
-                                        onMouseLeave={(e) => e.target.style.textDecoration = 'none'}
-                                        onClick={() => {
-                                            const productIndex = productIndices[item.product.name] !== undefined ? productIndices[item.product.name] : item.productIndex || index;
-                                            console.log(`Clicking ${item.product.name}, going to product ${productIndex}`);
-                                        }}
-                                    >
-                                        {item.product.name}
-                                    </Link>
-                                </div>
+                                            {/* Product Name */}
+                                            <div className="col-span-5 lg:col-span-3">
+                                                <Link 
+                                                    to={`/product/${productIndices[item.product.name] !== undefined ? productIndices[item.product.name] : item.productIndex || index}`}
+                                                    className="text-blue-600 hover:text-blue-800 font-medium hover:underline transition-colors duration-200"
+                                                >
+                                                    {item.product.name}
+                                                </Link>
+                                            </div>
 
-                                <div className="col-4 col-lg-2 mt-4 mt-lg-0">
-                                    <p id="card_item_price">${item.product.price}</p>
-                                </div>
+                                            {/* Price */}
+                                            <div className="col-span-3 lg:col-span-2">
+                                                <p className="text-lg font-semibold text-gray-900">${item.product.price}</p>
+                                            </div>
 
-                                <div className="col-4 col-lg-3 mt-4 mt-lg-0">
-                                    <div className="stockCounter d-inline">
-                                        <span 
-                                            className="btn btn-danger minus" 
-                                            onClick={() => updateQuantity(index, item.qty - 1)}
-                                            style={{ cursor: 'pointer' }}
-                                        >
-                                            -
-                                        </span>
-                                        <input 
-                                            type="number" 
-                                            className="form-control count d-inline" 
-                                            value={item.qty} 
-                                            readOnly 
-                                        />
-                                        <span 
-                                            className="btn btn-primary plus" 
-                                            onClick={() => updateQuantity(index, item.qty + 1)}
-                                            style={{ cursor: 'pointer' }}
-                                        >
-                                            +
-                                        </span>
+                                            {/* Quantity Controls */}
+                                            <div className="col-span-4 lg:col-span-3">
+                                                <div className="flex items-center space-x-2">
+                                                    <button 
+                                                        className="w-8 h-8 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                                                        onClick={() => updateQuantity(index, item.qty - 1)}
+                                                    >
+                                                        -
+                                                    </button>
+                                                    <input 
+                                                        type="number" 
+                                                        className="w-16 h-8 text-center border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent font-semibold"
+                                                        value={item.qty} 
+                                                        readOnly 
+                                                    />
+                                                    <button 
+                                                        className="w-8 h-8 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                                                        onClick={() => updateQuantity(index, item.qty + 1)}
+                                                    >
+                                                        +
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            {/* Remove Button */}
+                                            <div className="col-span-4 lg:col-span-1">
+                                                <button 
+                                                    onClick={() => removeFromCart(index)}
+                                                    className="w-8 h-8 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                                                >
+                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-
-                                <div className="col-4 col-lg-1 mt-4 mt-lg-0">
-                                    <button 
-                                        onClick={() => removeFromCart(index)}
-                                        className="btn btn-danger"
-                                        style={{ cursor: 'pointer' }}
-                                    >
-                                        <i className="fa fa-trash"></i>
-                                    </button>
-                                </div>
+                                ))}
                             </div>
                         </div>
-                    ))}
-                    <hr />
-                </div>
+                    </div>
 
-                <div className="col-12 col-lg-3 my-4">
-                    <div id="order_summary">
-                        <h4>Order Summary</h4>
-                        <hr />
-                        <p>Subtotal: <span className="order-summary-values">{subtotal} (Units)</span></p>
-                        <p>Est. total: <span className="order-summary-values">${total.toFixed(2)}</span></p>
-                        <hr />
-                        
-                        {/* Order Message Display */}
-                        {orderMessage && (
-                            <div className={`alert ${orderMessage.includes('✅') ? 'alert-success' : 'alert-warning'}`} role="alert">
-                                {orderMessage}
-                                {orderMessage.includes('✅') && (
-                                    <div className="mt-2">
-                                        <small>Redirecting to home page in a few seconds...</small>
+                    {/* Order Summary */}
+                    <div className="lg:col-span-1">
+                        <div className="bg-white rounded-2xl shadow-lg p-6 sticky top-24">
+                            <h4 className="text-xl font-bold text-gray-900 mb-6">Order Summary</h4>
+                            <div className="space-y-4 mb-6">
+                                <div className="flex justify-between items-center">
+                                    <span className="text-gray-600">Subtotal:</span>
+                                    <span className="font-semibold text-gray-900">{subtotal} (Units)</span>
+                                </div>
+                                <div className="border-t border-gray-200 pt-4">
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-gray-600 text-lg">Total:</span>
+                                        <span className="font-bold text-2xl text-blue-600">${total.toFixed(2)}</span>
                                     </div>
-                                )}
+                                </div>
                             </div>
-                        )}
-                        
-                        <button 
-                            id="checkout_btn" 
-                            className="btn btn-primary btn-block"
-                            onClick={handlePlaceOrder}
-                            disabled={orderPlaced || processingOrder}
-                        >
-                            {processingOrder ? (
-                                <>
-                                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                                    Processing...
-                                </>
-                            ) : orderPlaced ? (
-                                'Order Placed!'
-                            ) : (
-                                'Place Order'
+                            
+                            {/* Order Message Display */}
+                            {orderMessage && (
+                                <div className={`mb-6 p-4 rounded-lg ${
+                                    orderMessage.includes('✅') 
+                                        ? 'bg-green-100 text-green-800 border border-green-200' 
+                                        : 'bg-yellow-100 text-yellow-800 border border-yellow-200'
+                                }`}>
+                                    <p className="font-medium">{orderMessage}</p>
+                                    {orderMessage.includes('✅') && (
+                                        <p className="text-sm mt-2 opacity-75">
+                                            Redirecting to home page in a few seconds...
+                                        </p>
+                                    )}
+                                </div>
                             )}
-                        </button>
-                        
-                        {/* Continue Shopping Button */}
-                        {orderPlaced && (
-                            <Link to="/" className="btn btn-outline-primary btn-block mt-2">
-                                Continue Shopping
-                            </Link>
-                        )}
+                            
+                            {/* Place Order Button */}
+                            <button 
+                                className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-4 px-6 rounded-lg transition-all duration-200 mb-4 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:transform-none"
+                                onClick={handlePlaceOrder}
+                                disabled={orderPlaced || processingOrder}
+                            >
+                                {processingOrder ? (
+                                    <div className="flex items-center justify-center">
+                                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                        Processing...
+                                    </div>
+                                ) : orderPlaced ? (
+                                    'Order Placed!'
+                                ) : (
+                                    'Place Order'
+                                )}
+                            </button>
+                            
+                            {/* Continue Shopping Button */}
+                            {orderPlaced && (
+                                <Link to="/" className="block w-full bg-white border-2 border-blue-600 text-blue-600 hover:bg-blue-50 font-semibold py-4 px-6 rounded-lg text-center transition-all duration-200">
+                                    Continue Shopping
+                                </Link>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>
