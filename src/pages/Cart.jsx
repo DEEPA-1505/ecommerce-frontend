@@ -38,7 +38,7 @@ export default function Cart({ cartItems, setCartItems }) {
     // Function to find the correct product index by name
     const findProductIndexByName = async (productName) => {
         try {
-            const response = await fetch('http://localhost:8000/api/v1/products');
+            const response = await fetch('https://ecommerce-backend-production-749c.up.railway.app/api/v1/products');
             const data = await response.json();
             if (data.success) {
                 const productIndex = data.products.findIndex(p => p.name === productName);
@@ -54,7 +54,7 @@ export default function Cart({ cartItems, setCartItems }) {
     useEffect(() => {
         const fetchProductIndices = async () => {
             try {
-                const response = await fetch('http://localhost:8000/api/v1/products');
+                const response = await fetch('https://ecommerce-backend-production-749c.up.railway.app/api/v1/products');
                 const data = await response.json();
                 if (data.success) {
                     const indices = {};

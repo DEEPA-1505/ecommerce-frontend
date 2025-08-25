@@ -13,7 +13,7 @@ export default function Home() {
       try {
         setLoading(true);
         const res = await fetch(
-          `http://localhost:8000/api/v1/products?${searchParams.toString()}`
+          `https://ecommerce-backend-production-749c.up.railway.app/api/v1/products?${searchParams.toString()}`
         );
         if (!res.ok) throw new Error("Failed to fetch products");
         const data = await res.json();

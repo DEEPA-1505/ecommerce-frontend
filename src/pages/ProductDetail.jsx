@@ -39,7 +39,7 @@ export default function ProductDetail({cartItems, setCartItems}) {
   };
 
   useEffect(() => {
-    fetch(`http://localhost:8000/api/v1/product/${id}`)
+    fetch(`https://ecommerce-backend-production-749c.up.railway.app/api/v1/product/${id}`)
       .then((res) => {
         if (!res.ok) throw new Error("Product not found");
         return res.json();
